@@ -251,7 +251,7 @@ A: Your submission may be invalid—always enter your login before exporting.
 ## License
 
 Distributed for educational purposes only.  
-Project template and interface © [Your School/Organization].  
+Project template and interface © [1337 UM6P / ABDOUAHI].  
 All rights reserved.
 
 ---
