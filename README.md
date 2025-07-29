@@ -10,14 +10,14 @@
 - [Introduction](#introduction)
 - [What is Computer Networking?](#what-is-computer-networking)
 - [Key Networking Concepts (Deep Dive)](#key-networking-concepts-deep-dive)
-  - [1. IP Addressing](#1-ip-addressing)
+  - [1. IP Addressing (IPv4, IPv6, Static, Dynamic)](#1-ip-addressing-ipv4-ipv6-static-dynamic)
   - [2. Subnet Masks & Subnetting](#2-subnet-masks--subnetting)
   - [3. Routers & Routing](#3-routers--routing)
   - [4. The Default Gateway](#4-the-default-gateway)
-  - [5. TCP/IP Protocol Suite](#5-tcpip-protocol-suite)
+  - [5. TCP/IP Protocol Suite (with Common Protocols)](#5-tcpip-protocol-suite-with-common-protocols)
   - [6. IPv4 vs. IPv6](#6-ipv4-vs-ipv6)
   - [7. Network Devices](#7-network-devices)
-  - [8. Communication Models: OSI & TCP/IP](#8-communication-models-osi--tcpip)
+  - [8. Communication Models: OSI vs. TCP/IP](#8-communication-models-osi-vs-tcpip)
   - [9. Common Network Problems](#9-common-network-problems)
 - [Project Structure](#project-structure)
 - [How to Use NetPractice](#how-to-use-netpractice)
@@ -37,46 +37,45 @@ The following explanations cover every fundamental topic you'll need—not just 
 
 ## What is Computer Networking?
 
-**A computer network** is a collection of computers and devices connected together to share information and resources. These connections can be physical (cables) or wireless (Wi-Fi). The Internet is the largest network, connecting millions of private, public, and business networks.
+A **computer network** is a collection of computers and devices connected together to share information and resources. These connections can be physical (cables) or wireless (Wi-Fi). The Internet is the largest network, connecting millions of private, public, and business networks.
 
 ---
 
 ## Key Networking Concepts (Deep Dive)
 
-### 1. IP Addressing
+### 1. IP Addressing (IPv4, IPv6, Static, Dynamic)
 
 #### What is an IP Address?
 
-- An **IP (Internet Protocol) address** is a unique identifier assigned to each device on a network.
-- Think of it like a postal address for your computer—without it, data can’t find its destination.
+- An **IP (Internet Protocol) address** is a unique identifier for a device on a network, needed to send/receive data.
 
-#### Types of IP Addresses
+#### IPv4
 
-- **IPv4:**  
-  - Format: Four decimal numbers (0-255) separated by dots, e.g., `192.168.1.1`
-  - 32 bits in size, about 4.3 billion unique addresses
+- Format: Four decimal numbers (0–255) separated by dots, e.g., `192.168.1.1`
+- 32 bits in size, ~4.3 billion unique addresses
 
-- **IPv6:**  
-  - Format: Eight groups of four hexadecimal digits, e.g., `2001:0db8:85a3:0000:0000:8a2e:0370:7334`
-  - 128 bits, providing a virtually unlimited number of addresses
+#### IPv6
 
-#### Types of Assignment
+- Format: Eight groups of four hexadecimal digits, e.g., `2001:0db8:85a3:0000:0000:8a2e:0370:7334`
+- 128 bits, virtually unlimited addresses
 
-- **Static IP:** Manually set and does not change
-- **Dynamic IP:** Assigned by a server (DHCP) and can change over time
+#### Static vs. Dynamic IP Assignment
 
-#### Classes of IPv4 Addresses
+- **Static IP:** Manually set, persistent (never changes unless you change it).
+- **Dynamic IP:** Assigned automatically by **DHCP (Dynamic Host Configuration Protocol)** server; can change over time.
 
-- **Class A:** `1.0.0.0` to `126.255.255.255` (large networks)
-- **Class B:** `128.0.0.0` to `191.255.255.255` (medium networks)
-- **Class C:** `192.0.0.0` to `223.255.255.255` (small networks)
-- **Class D & E:** Multicast and reserved
+#### Special IPv4 Address Classes and Ranges
 
-#### Special Addresses
-
-- **Loopback:** `127.0.0.1` (refers to the local machine)
-- **Broadcast:** Last address in a subnet, e.g., `192.168.1.255`
-- **Network Address:** First address in a subnet, e.g., `192.168.1.0`
+| Class   | Range                          | Purpose/Notes                                        |
+|---------|--------------------------------|------------------------------------------------------|
+| A       | 1.0.0.0 – 126.255.255.255      | Large networks                                       |
+| B       | 128.0.0.0 – 191.255.255.255    | Medium networks                                      |
+| C       | 192.0.0.0 – 223.255.255.255    | Small networks                                       |
+| D       | 224.0.0.0 – 239.255.255.255    | Multicast                                            |
+| E       | 240.0.0.0 – 255.255.255.254    | Reserved for research (not for general use)          |
+| **Loopback** | **127.0.0.0/8**               | Localhost testing, e.g., `127.0.0.1` – `127.255.255.254` |
+| **Broadcast** | Last address in subnet         | E.g. `192.168.1.255` in `192.168.1.0/24`             |
+| **Network Address** | First address in subnet    | Identifies the subnet, e.g., `192.168.1.0`           |
 
 ---
 
@@ -84,39 +83,30 @@ The following explanations cover every fundamental topic you'll need—not just 
 
 #### What is a Subnet Mask?
 
-- A **subnet mask** determines which portion of the IP address is the “network” and which part is the “host.”
-- Example: In `192.168.1.15` with mask `255.255.255.0`:
-  - `192.168.1` = Network part
-  - `.15` = Host part
-
-#### How Subnet Masks Work
-
-- **255** in the mask means “network,” and **0** means “host.”
-- Expressed in “dotted decimal” (`255.255.255.0`) or “slash notation” (`/24`).
-
-#### Why is Subnetting Important?
-
-- Divides a large network into smaller sub-networks (subnets) for:
-  - Security
-  - Performance (reduces broadcast traffic)
-  - Easier management
-
-#### Calculating Subnets
-
-- **Formula:**  
-  - Number of hosts per subnet = 2^(number of host bits) – 2
-    - (Subtract 2 for network and broadcast addresses)
+- A **subnet mask** splits an IP address into its "network" and "host" parts.
 - Example:  
-  - Mask: `255.255.255.0` (or `/24`) → 8 host bits → 254 hosts
+  - IP: `192.168.1.15`, Mask: `255.255.255.0`
+  - `192.168.1` is the network part, `.15` is the host part.
 
-#### Common Masks
+#### Subnet Mask Function
 
-| CIDR   | Dotted Decimal    | Hosts   |
-|--------|-------------------|---------|
-| /8     | 255.0.0.0         | 16,777,214 |
-| /16    | 255.255.0.0       | 65,534     |
-| /24    | 255.255.255.0     | 254        |
-| /30    | 255.255.255.252   | 2          |
+- A **mask** uses binary: `255` = network bit, `0` = host bit.
+- **CIDR Notation**: `/24` means 24 bits are network (e.g., `255.255.255.0`)
+- **Hosts per subnet** = 2^(host bits) − 2 (for network & broadcast addresses)
+
+#### Why Subnet?
+
+- Breaks a large network into smaller, manageable, more secure, and efficient pieces.
+- Reduces broadcast traffic; easier troubleshooting.
+
+#### Example Table
+
+| CIDR   | Dotted Decimal      | Hosts per Subnet |
+|--------|---------------------|------------------|
+| /8     | 255.0.0.0           | 16,777,214       |
+| /16    | 255.255.0.0         | 65,534           |
+| /24    | 255.255.255.0       | 254              |
+| /30    | 255.255.255.252     | 2                |
 
 ---
 
@@ -124,127 +114,107 @@ The following explanations cover every fundamental topic you'll need—not just 
 
 #### What is a Router?
 
-- A **router** connects different networks and directs data packets between them.
-- Each interface on a router belongs to a different network/subnet.
+- Connects different networks (subnets) and forwards packets between them.
+- Each router interface is in a different network.
 
-#### How Routing Works
+#### Routing Tables
 
 - Routers use **routing tables** to decide where to send packets.
-- **Static routing:** Manually configured paths.
-- **Dynamic routing:** Routers exchange information automatically (using protocols like RIP, OSPF, BGP).
+- **Static Routes:** Manually configured.
+- **Dynamic Routes:** Added via routing protocols (RIP, OSPF, BGP, etc).
 
-#### Default Route
+#### Calculating Routes
 
-- A route that matches all destinations not known in the table (usually pointing to the Internet).
-
-#### Example
-
-- If PC A (192.168.1.10) wants to talk to PC B (10.0.0.5), their routers need to know how to reach each network.
+- **Default Route**: `0.0.0.0/0` (the "catch-all" for unknown destinations; usually points to the Internet gateway)
+- If PC A (`192.168.1.10`) needs to talk to PC B (`10.0.0.5`), routers must have routes to both networks.
 
 ---
 
 ### 4. The Default Gateway
 
-- The **default gateway** is the router your device uses to access devices outside its own subnet.
-- Every host should know its default gateway IP.
-- If you can’t reach another network, check your default gateway!
+- The **default gateway** is the router IP that your device sends traffic to for addresses outside its own subnet.
+- Must be on the same subnet as the host.
+- Without a correct gateway, you can’t reach external networks (e.g. the Internet).
 
 ---
 
-### 5. TCP/IP Protocol Suite
+### 5. TCP/IP Protocol Suite (with Common Protocols)
 
 #### What is TCP/IP?
 
-- The **TCP/IP suite** is the foundation of Internet and local network communication.
-- It includes many protocols, but two stand out:
-
-  - **TCP (Transmission Control Protocol):**
-    - Reliable, connection-oriented
-    - Ensures all data arrives and is in order
-    - Used for web browsing, email, file transfers
-
-  - **IP (Internet Protocol):**
-    - Handles addressing and packet routing
-    - Responsible for getting data from source to destination
-
-#### Other Important Protocols
-
-- **UDP (User Datagram Protocol):** Faster, but less reliable. Used for streaming, games.
-- **ICMP (Internet Control Message Protocol):** Used for diagnostics (e.g., ping).
-- **ARP (Address Resolution Protocol):** Resolves IP addresses to MAC addresses on local networks.
+- The foundational suite of protocols for networking (used everywhere).
+- Main protocols:
+  - **TCP (Transmission Control Protocol):** Reliable, ordered delivery; used for web, email, file transfer.
+  - **IP (Internet Protocol):** Handles addressing and routing packets.
+  - **UDP (User Datagram Protocol):** Fast, unreliable; used for streaming, gaming.
+  - **ARP (Address Resolution Protocol):** Maps IPv4 addresses to MAC (hardware) addresses on a LAN.
+  - **ICMP (Internet Control Message Protocol):** Used for diagnostics & error reporting (e.g., `ping`, `traceroute`).
 
 ---
 
 ### 6. IPv4 vs. IPv6
 
-| Feature        | IPv4                      | IPv6                              |
-|----------------|---------------------------|-----------------------------------|
-| Length         | 32 bits                   | 128 bits                          |
-| Format         | 192.168.1.1               | 2001:0db8:85a3:0000:0000:8a2e:0370:7334 |
-| Number of addresses | ~4.3 billion         | 3.4×10^38 (massive!)              |
-| Address exhaustion | Yes                   | No                                |
-| NAT required?  | Often                     | Not usually                       |
+| Feature         | IPv4                         | IPv6                                   |
+|-----------------|-----------------------------|----------------------------------------|
+| Length          | 32 bits                      | 128 bits                               |
+| Format          | 192.168.1.1                  | 2001:0db8:85a3:0000:0000:8a2e:0370:7334|
+| Address count   | ~4.3 billion                 | 3.4×10^38                              |
+| NAT needed?     | Often                        | Rarely                                 |
+| Address exhaustion | Yes                       | No                                     |
 
-**Tip:** Most NetPractice projects use IPv4, but understanding both is useful.
+**Tip:** NetPractice focuses on IPv4, but understanding both is valuable.
 
 ---
 
 ### 7. Network Devices
 
 - **Host/Workstation:** Any device with an IP (PC, server, printer)
-- **Switch:** Connects devices within the same network; works at Layer 2 (Data Link)
-- **Router:** Connects different networks/subnets; works at Layer 3 (Network)
-- **Firewall:** Controls traffic, protects networks
-- **Access Point:** Connects wireless devices to a wired network
-- **DHCP Server:** Assigns dynamic IP addresses to devices
+- **Switch:** Connects devices within the same network (Layer 2)
+- **Router:** Connects different networks/subnets (Layer 3)
+- **Firewall:** Filters traffic for security
+- **Access Point:** Wireless bridge to a wired network
+- **DHCP Server:** Assigns dynamic IPs
 
 ---
 
-### 8. Communication Models: OSI & TCP/IP
+### 8. Communication Models: OSI vs. TCP/IP
 
-#### OSI Model: 7 Layers
+The **OSI Model** is a conceptual framework for understanding networking, but not all layers map directly to real protocols. The **TCP/IP Model** is what’s actually used.
 
-1. **Physical:** Cables, signals
-2. **Data Link:** MAC addresses, switches, Ethernet
-3. **Network:** IP addressing, routing
-4. **Transport:** TCP/UDP, ports
-5. **Session:** Connections, dialogs
-6. **Presentation:** Encryption, formatting
-7. **Application:** Web, email, FTP
+| OSI Layer     | Function                                  | TCP/IP Equivalent          |
+|---------------|-------------------------------------------|---------------------------|
+| Application   | User-facing services (web, email, FTP, etc.) | Application               |
+| Presentation  | Data formatting, encryption (rarely separate) | Application               |
+| Session       | Dialog management (rarely separate)       | Application (often)       |
+| Transport     | Host-to-host communication (conceptual; TCP/UDP) | Transport (TCP/UDP)   |
+| Network       | IP addressing, routing                    | Internet                  |
+| Data Link     | MAC addresses, switches                   | Network Interface         |
+| Physical      | Cables, signals                           | Network Interface         |
 
-#### TCP/IP Model: 4 Layers
-
-1. **Network Interface (Link)**
-2. **Internet (IP)**
-3. **Transport (TCP/UDP)**
-4. **Application**
-
-**Why does this matter?**  
-Understanding which layer a problem is on helps you troubleshoot efficiently.
+**Notes:**
+- TCP/UDP protocols live in the TCP/IP Transport layer, and are not defined by the OSI standard.
+- Session/Presentation layers are rarely mapped to discrete protocols; their functions are often built into Application layer protocols.
 
 ---
 
 ### 9. Common Network Problems
 
-- **IP Address Conflict:** Two devices share an IP
-- **Incorrect Subnet Mask:** Devices think they're on different networks
-- **Wrong Default Gateway:** Can't reach other networks
-- **Routing Table Errors:** Routers don't know where to send data
-- **Missing/Incorrect Routes:** Packets get lost
-- **Physical Issues:** Cables unplugged, hardware failure
+- **IP Address Conflict:** Two devices with the same IP
+- **Incorrect Subnet Mask:** Devices can’t see each other
+- **Wrong Default Gateway:** Can’t reach outside networks
+- **Routing Table Errors:** Routers can’t forward packets correctly
+- **Missing/Incorrect Routes:** Data gets lost or can’t leave the network
+- **Physical Issues:** Unplugged cables, dead hardware
 
 ---
 
 ## Project Structure
 
-Your repository should contain:
-
 - `level1.txt`  
 - `level2.txt`  
 - ...  
 - `level10.txt`  
-
-Each file is your exported solution for a level in the NetPractice simulator.
+Exported from the simulator after solving each level.
 
 ---
 
@@ -253,26 +223,22 @@ Each file is your exported solution for a level in the NetPractice simulator.
 1. **Download and Extract** the simulator package.
 2. **Open `index.html`** in your browser.
 3. **Enter Your Login** (mandatory for grading).
-4. **Solve Each Level:**
-   - Read the scenario and goal.
-   - Assign correct IPs, masks, gateways, and routes.
-   - Use [Check again] to test your config.
-   - Use [Get my config] to export your solution.
+4. **Solve Each Level:** Assign correct IPs, masks, gateways, and routes. Test with [Check again]. Export with [Get my config].
 5. **Place all config files at the root of your repo** before submission.
 
 ---
 
 ## Tips for Success
 
-- **Understand IPv4 addressing and subnetting deeply.**
-- **Double-check your subnet masks and default gateways.**
-- **If devices can’t communicate, check:**
-  - Are they in the same subnet? If not, is routing correct?
-  - Are gateways set correctly?
-  - Is there an IP conflict?
-- **Work step-by-step:** Fix one device at a time and test.
-- **Use the logs:** They tell you what’s broken.
-- **Practice subnet calculations by hand:** You’ll need this speed in real evaluations.
+- **Master IPv4 addressing and subnetting.**
+- **Double-check subnet masks and gateways.**
+- **When devices can’t communicate, check:**
+  - Are they in the same subnet?
+  - Is routing configured correctly?
+  - Are the gateways correct?
+  - Any IP conflicts?
+- **Work step-by-step:** Fix one device/route at a time. Use logs for troubleshooting.
+- **Practice subnet calculations by hand:** You’ll need speed in real exams.
 
 ---
 
@@ -285,7 +251,7 @@ A: Devices may think they're not in the same network and won’t communicate.
 A: The gateway must be an IP address on the same subnet as the device.
 
 **Q: What does [Get my config] do?**  
-A: It exports your current configuration, which you submit for grading.
+A: It exports your current configuration for grading.
 
 **Q: Can I use online calculators?**  
 A: For practice, yes. During evaluation, only a basic calculator is allowed.
@@ -295,7 +261,7 @@ A: For practice, yes. During evaluation, only a basic calculator is allowed.
 ## License
 
 Distributed for educational purposes only.  
-Project template and interface © [1337 UM6P / ABDOUAHI].  
+Project template and interface © [Your School/Organization].  
 All rights reserved.
 
 ---
